@@ -34,6 +34,9 @@ public class StudentService {
         if(request.getAddress() != null){
             entity.setAddress(request.getAddress());
         }
+        if(request.getGpa() > 4){
+            return null;
+        }
         if(request.getGpa() != null){
             entity.setGpa(request.getGpa());
         }
@@ -55,6 +58,9 @@ public class StudentService {
         }
         if(request.getAddress() != null){
             entity.setAddress(request.getAddress());
+        }
+        if(request.getGpa() > 4){
+            return null;
         }
         if(request.getGpa() != null){
             entity.setGpa(request.getGpa());
