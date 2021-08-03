@@ -63,6 +63,9 @@ public class StudentService implements ServiceInterface {
 
     @Override
     public ResponseEntity addNewStudent(NewStudentRequest request) {
+        if(request.getGpa() < 0 || request.getGpa() >4){
+            return factory.failed();
+        }
         try {
             Statement statement = connection.createStatement();
             String sql = "INSERT INTO `student`(`student_name`,`address`,`gpa`) VALUE ('" + request.getStudent_name() + "'," +
@@ -80,6 +83,9 @@ public class StudentService implements ServiceInterface {
     public ResponseEntity updateStudent(Integer id, UpdateStudentRequest request) {
         StudentEntity entity = findStudentById(id);
         if(entity == null){
+            return factory.failed();
+        }
+        if(request.getGpa() < 0 || request.getGpa() >4){
             return factory.failed();
         }
         try{
