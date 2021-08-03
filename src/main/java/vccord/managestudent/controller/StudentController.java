@@ -8,16 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vccord.managestudent.controller.request.NewStudentRequest;
 import vccord.managestudent.controller.request.UpdateStudentRequest;
-import vccord.managestudent.entity.StudentEntity;
-import vccord.managestudent.factory.ResponseFactory;
-
 import vccord.managestudent.service.ServiceInterface;
-import vccord.managestudent.service.StudentService;
 
-
-import javax.websocket.server.PathParam;
-import java.sql.SQLException;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/manage-student")

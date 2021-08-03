@@ -31,8 +31,4 @@ public class ConnectionDB {
         }
         return conn;
     }
-    @Bean
-    RestTemplate restTemplate(){
-        return new RestTemplate();
-    }
 }
