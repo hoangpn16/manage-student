@@ -23,6 +23,14 @@ public class ResponseFactory {
         responseObject.setData(data);
         return ResponseEntity.ok(responseObject);
     }
+    public static ResponseEntity success() {
+        GeneralResponse<Object> responseObject = new GeneralResponse<>();
+        responseObject.setStatus(1);
+        responseObject.setCode(200);
+        responseObject.setMessage("Successfully");
+
+        return ResponseEntity.ok(responseObject);
+    }
     public static ResponseEntity failed(Object data) {
         GeneralResponse<Object> responseObject = new GeneralResponse<>();
         responseObject.setStatus(0);
@@ -38,6 +46,13 @@ public class ResponseFactory {
         responseObject.setCode(500);
         responseObject.setMessage("Failed");
         responseObject.setData(data);
+        return ResponseEntity.ok(responseObject);
+    }
+    public static ResponseEntity failed() {
+        GeneralResponse<Object> responseObject = new GeneralResponse<>();
+        responseObject.setStatus(0);
+        responseObject.setCode(500);
+        responseObject.setMessage("Failed");
         return ResponseEntity.ok(responseObject);
     }
 

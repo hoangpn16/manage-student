@@ -3,85 +3,170 @@ package vccord.managestudent.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import vccord.managestudent.controller.request.NewStudentRequest;
 import vccord.managestudent.controller.request.UpdateStudentRequest;
-import vccord.managestudent.repository.StudentRepository;
-import vccord.managestudent.repository.entity.StudentEntity;
-
+import vccord.managestudent.entity.StudentEntity;
+import vccord.managestudent.factory.ResponseFactory;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
+
 @Service
-public class StudentService {
+public class StudentService implements ServiceInterface {
     private static final Logger logger = LoggerFactory.getLogger(StudentService.class);
 
     @Autowired
-    StudentRepository repository;
+    private Connection connection;
+    @Autowired
+    private ResponseFactory factory;
+
+
+    @Override
+    public ResponseEntity getStudentById(Integer id) {
+        StudentEntity data = findStudentById(id);
+        if(data == null){
+            return factory.failed();
+        }
+        return factory.success(data,"student information");
+    }
+
+    @Override
+    public ResponseEntity getStudentByName(String name) {
+        List<StudentEntity> data = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            String sql = "SELECT * FROM `student` WHERE `student_name` LIKE '%" + name + "%';";
+
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                StudentEntity entity = new StudentEntity();
+
+                entity.setStudent_id(resultSet.getInt("student_id"));
+                entity.setStudent_name(resultSet.getString("student_name"));
+                entity.setAddress(resultSet.getString("address"));
+                entity.setGpa(resultSet.getFloat("gpa"));
+
+                data.add(entity);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return factory.failed(data);
+        }
+        return factory.success(data, "student information");
+    }
+
+    @Override
+    public ResponseEntity addNewStudent(NewStudentRequest request) {
+        try {
+            Statement statement = connection.createStatement();
+            String sql = "INSERT INTO `student`(`student_name`,`address`,`gpa`) VALUE ('" + request.getStudent_name() + "'," +
+                    "'" + request.getAddress() + "'," + request.getGpa() + ");";
+            System.out.println(sql);
+            statement.execute(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return factory.failed();
+        }
+        return factory.success();
+    }
+
+    @Override
+    public ResponseEntity updateStudent(Integer id, UpdateStudentRequest request) {
+        StudentEntity entity = findStudentById(id);
+        if(entity == null){
+            return factory.failed();
+        }
+        try{
+            Statement statement = connection.createStatement();
+            String sql = "UPDATE `student` SET ";
+            if(request.getStudent_id() != null){
+                sql+= "`student_id` = "+request.getStudent_id()+" ,";
+            }
+            if(request.getStudent_name() != null){
+                sql += "`student_name` = '"+request.getStudent_name()+"' ,";
+            }
+            if(request.getStudent_name() != null){
+                sql += "`address` = '"+request.getAddress()+"' ,";
+            }
+            if(request.getStudent_name() != null){
+                sql += "`gpa` = "+request.getGpa()+" ,";
+            }
+            sql=sql.substring(0,sql.length()-1);
+            sql += " WHERE `student_id` = "+id+";";
+            System.out.println(sql);
+            statement.execute(sql);
+        }catch (Exception e){
+            e.printStackTrace();
+            return factory.failed();
+        }
+        return factory.success(entity,"Successfully");
+    }
+
+    @Override
+    public ResponseEntity deleteStudent(Integer id) {
+        try{
+            Statement statement = connection.createStatement();
+            String sql = "DELETE FROM `student` WHERE `student_id` = "+id+";";
+            statement.execute(sql);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return factory.failed();
+        }
+        return factory.success();
+    }
+
+    @Override
+    public ResponseEntity getTopStudent(Integer top) {
+        List<StudentEntity> data = new ArrayList<>();
+        try{
+            Statement statement = connection.createStatement();
+            String sql = "SELECT * FROM `student` ORDER BY `gpa` DESC LIMIT "+top+";";
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()){
+                StudentEntity entity = new StudentEntity();
+
+                entity.setStudent_id(resultSet.getInt("student_id"));
+                entity.setStudent_name(resultSet.getString("student_name"));
+                entity.setAddress(resultSet.getString("address"));
+                entity.setGpa(resultSet.getFloat("gpa"));
+
+                data.add(entity);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return factory.failed();
+        }
+        return factory.success(data,"student information");
+    }
 
     public StudentEntity findStudentById(Integer id){
-       return repository.findOneByStudentId(id);
-    }
-
-    public List<StudentEntity>  findStudentByName(String name){
-        return repository.findAllByStudentName(name);
-    }
-
-    public StudentEntity addNewStudent(NewStudentRequest request){
         StudentEntity entity = new StudentEntity();
-        if(request.getStudent_name() != null){
-            entity.setStudentName(request.getStudent_name());
-        }
-        if(request.getAddress() != null){
-            entity.setAddress(request.getAddress());
-        }
-        if(request.getGpa() > 4){
+        try {
+            Statement statement = connection.createStatement();
+            String sql = " SELECT * FROM `student` WHERE `student_id` =" + id + ";";
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                entity.setStudent_id(resultSet.getInt("student_id"));
+                entity.setStudent_name(resultSet.getString("student_name"));
+                entity.setAddress(resultSet.getString("address"));
+                entity.setGpa(resultSet.getFloat("gpa"));
+            }
+            if (entity == null) {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
-        if(request.getGpa() != null){
-            entity.setGpa(request.getGpa());
-        }
-
-        return repository.save(entity);
+        return entity;
     }
 
-    public StudentEntity updateStudent(Integer id , UpdateStudentRequest request){
-        StudentEntity entity = repository.findOneByStudentId(id);
-        if(entity == null){
-            return null;
-        }
 
-        if(request.getStudent_id() != null){
-            entity.setStudentId(request.getStudent_id());
-        }
-        if(request.getStudent_name() != null){
-            entity.setStudentName(request.getStudent_name());
-        }
-        if(request.getAddress() != null){
-            entity.setAddress(request.getAddress());
-        }
-        if(request.getGpa() > 4){
-            return null;
-        }
-        if(request.getGpa() != null){
-            entity.setGpa(request.getGpa());
-        }
-        return repository.save(entity);
-    }
-
-    public String deleteStudent(Integer id){
-        StudentEntity entity = repository.findOneByStudentId(id);
-        if(entity == null){
-            return null;
-        }
-        repository.deleteById(id);
-        return "DELETED";
-    }
-
-    public List<StudentEntity> findTopStudent(Integer top){
-        List<StudentEntity> allStudent = repository.findAll();
-        if(top> allStudent.size()){
-            return null;
-        }
-        return repository.findTopGpa(top);
-    }
 }
