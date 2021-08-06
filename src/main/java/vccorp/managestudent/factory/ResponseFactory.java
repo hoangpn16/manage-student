@@ -1,4 +1,4 @@
-package vccord.managestudent.factory;
+package vccorp.managestudent.factory;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;

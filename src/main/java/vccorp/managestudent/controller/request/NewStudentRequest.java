@@ -1,5 +1,6 @@
-package vccord.managestudent.controller.request;
+package vccorp.managestudent.controller.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewStudentRequest {
-    private String student_name;
+    @JsonProperty("student_name")
+    private String studentName;
+
     private String address;
     private Float gpa;
 }

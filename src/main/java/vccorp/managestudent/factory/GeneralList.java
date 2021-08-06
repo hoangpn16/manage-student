@@ -1,4 +1,4 @@
-package vccord.managestudent.factory;
+package vccorp.managestudent.factory;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

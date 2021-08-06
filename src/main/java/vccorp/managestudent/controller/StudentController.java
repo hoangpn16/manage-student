@@ -1,4 +1,4 @@
-package vccord.managestudent.controller;
+package vccorp.managestudent.controller;
 
 
 import org.slf4j.Logger;
@@ -6,10 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import vccord.managestudent.controller.request.NewStudentRequest;
-import vccord.managestudent.controller.request.UpdateStudentRequest;
-import vccord.managestudent.service.ServiceInterface;
-
+import vccorp.managestudent.controller.request.NewStudentRequest;
+import vccorp.managestudent.controller.request.UpdateStudentRequest;
+import vccorp.managestudent.interfaces.ServiceInterface;
 
 @RestController
 @RequestMapping(value = "/manage-student")
@@ -49,7 +48,7 @@ public class StudentController {
     @PutMapping(value = "/update/{id}")
     public ResponseEntity updateStudent(@PathVariable(name = "id") Integer id,
                                         @RequestBody UpdateStudentRequest request) {
-        logger.info("Update student'infor id [{}]", request.getStudent_id());
+        logger.info("Update student'infor id [{}]", request.getStudentId());
 
         return service.updateStudent(id,request);
     }

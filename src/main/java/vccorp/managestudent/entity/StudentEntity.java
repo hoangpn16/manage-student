@@ -1,4 +1,4 @@
-package vccord.managestudent.entity;
+package vccorp.managestudent.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,8 +10,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudentEntity {
-    private Integer student_id;
-    private String student_name;
+    private Integer studentId;
+    private String studentName;
     private String address;
     private Float gpa;
     
