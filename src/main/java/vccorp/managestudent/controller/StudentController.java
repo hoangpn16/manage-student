@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vccorp.managestudent.controller.request.NewStudentRequest;
 import vccorp.managestudent.controller.request.UpdateStudentRequest;
-import vccorp.managestudent.interfaces.ServiceInterface;
+import vccorp.managestudent.service.ServiceInterface;
 
 @RestController
 @RequestMapping(value = "/manage-student")

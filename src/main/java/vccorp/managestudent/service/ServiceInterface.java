@@ -1,11 +1,10 @@
-package vccorp.managestudent.interfaces;
+package vccorp.managestudent.service;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import vccorp.managestudent.controller.request.NewStudentRequest;
 import vccorp.managestudent.controller.request.UpdateStudentRequest;
 
-@Repository
+
 public interface ServiceInterface {
     public ResponseEntity getStudentById(Integer id);
 

@@ -1,4 +1,4 @@
-package vccorp.managestudent.entity;
+package vccorp.managestudent.repository;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
