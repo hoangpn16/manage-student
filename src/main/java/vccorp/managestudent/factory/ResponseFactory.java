@@ -31,29 +31,29 @@ public class ResponseFactory {
 
         return ResponseEntity.ok(responseObject);
     }
-    public static ResponseEntity failed(Object data) {
-        GeneralResponse<Object> responseObject = new GeneralResponse<>();
-        responseObject.setStatus(0);
-        responseObject.setCode(500);
-        responseObject.setMessage("Failed");
-        responseObject.setData(data);
-        return ResponseEntity.ok(responseObject);
-    }
 
-    public static ResponseEntity failed(List<Object> data) {
-        GeneralList<Object> responseObject = new GeneralList<>();
-        responseObject.setStatus(0);
-        responseObject.setCode(500);
-        responseObject.setMessage("Failed");
-        responseObject.setData(data);
-        return ResponseEntity.ok(responseObject);
-    }
-    public static ResponseEntity failed() {
-        GeneralResponse<Object> responseObject = new GeneralResponse<>();
-        responseObject.setStatus(0);
-        responseObject.setCode(500);
-        responseObject.setMessage("Failed");
-        return ResponseEntity.ok(responseObject);
-    }
+//    public static ResponseEntity failed() {
+//        GeneralList<Object> responseObject = new GeneralList<>();
+//        responseObject.setStatus(0);
+//        responseObject.setCode(500);
+//        responseObject.setMessage("Failed");
+//        return ResponseEntity.ok(responseObject);
+//    }
+//    public static ResponseEntity failed(ErrorCode code) {
+//        GeneralResponse<Object> responseObject = new GeneralResponse<>();
+//        responseObject.setStatus(code.status());
+//        responseObject.setCode(code.code());
+//        responseObject.setMessage(code.message());
+//        return ResponseEntity.ok(responseObject);
+//    }
+//
+//    public static ResponseEntity failed(Integer status, String message, Integer code) {
+//        GeneralList<Object> responseObject = new GeneralList<>();
+//        responseObject.setStatus(status);
+//        responseObject.setCode(code);
+//        responseObject.setMessage(message);
+//
+//        return ResponseEntity.ok(responseObject);
+//    }
 
 }

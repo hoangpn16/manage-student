@@ -4,6 +4,8 @@ import org.springframework.stereotype.Repository;
 import vccorp.managestudent.config.DataSource;
 import vccorp.managestudent.controller.request.NewStudentRequest;
 import vccorp.managestudent.controller.request.UpdateStudentRequest;
+import vccorp.managestudent.exception.AppException;
+import vccorp.managestudent.exception.ErrorCode;
 
 
 import java.sql.*;
@@ -34,6 +36,7 @@ public class StudentRepositoryImpl implements StudentRepository {
             } catch (SQLException se2) {
                 se2.printStackTrace();
             }
+            throw new AppException(ErrorCode.GENERAL_ERROR);
         }
     }
 
@@ -72,6 +75,7 @@ public class StudentRepositoryImpl implements StudentRepository {
             } catch (SQLException se2) {
                 se2.printStackTrace();
             }
+            throw new AppException(ErrorCode.GENERAL_ERROR);
         }
     }
 
@@ -96,7 +100,7 @@ public class StudentRepositoryImpl implements StudentRepository {
             }
             pstmt.close();
             connection.close();
-            if (entity == null) {
+            if (entity.getStudentId() == null) {
                 return null;
             }
         } catch (Exception e) {
@@ -107,7 +111,7 @@ public class StudentRepositoryImpl implements StudentRepository {
             } catch (SQLException se2) {
                 se2.printStackTrace();
             }
-            return null;
+            throw new AppException(ErrorCode.GENERAL_ERROR);
         }
         return entity;
     }
@@ -136,6 +140,10 @@ public class StudentRepositoryImpl implements StudentRepository {
 
                 data.add(entity);
 
+                if(data.size() == 0){
+                    return null;
+                }
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -145,7 +153,7 @@ public class StudentRepositoryImpl implements StudentRepository {
             } catch (SQLException se2) {
                 se2.printStackTrace();
             }
-            return null;
+            throw new AppException(ErrorCode.GENERAL_ERROR);
         } finally {
             try {
                 connection.close();
@@ -176,6 +184,9 @@ public class StudentRepositoryImpl implements StudentRepository {
                 entity.setGpa(resultSet.getFloat("gpa"));
 
                 data.add(entity);
+                if(data.size() == 0){
+                    return null;
+                }
 
             }
         } catch (Exception e) {
@@ -186,7 +197,7 @@ public class StudentRepositoryImpl implements StudentRepository {
             } catch (SQLException se2) {
                 se2.printStackTrace();
             }
-            return null;
+            throw new AppException(ErrorCode.GENERAL_ERROR);
         }finally {
             try {
                 connection.close();
@@ -218,6 +229,7 @@ public class StudentRepositoryImpl implements StudentRepository {
             } catch (SQLException se2) {
                 se2.printStackTrace();
             }
+            throw new AppException(ErrorCode.GENERAL_ERROR);
         }
     }
 }

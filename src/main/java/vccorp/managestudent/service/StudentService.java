@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import vccorp.managestudent.controller.request.NewStudentRequest;
 import vccorp.managestudent.controller.request.UpdateStudentRequest;
 import vccorp.managestudent.controller.response.StudentResponse;
+import vccorp.managestudent.exception.AppException;
+import vccorp.managestudent.exception.ErrorCode;
 import vccorp.managestudent.repository.StudentEntity;
 import vccorp.managestudent.factory.ResponseFactory;
 import vccorp.managestudent.repository.StudentRepository;
@@ -22,13 +24,13 @@ public class StudentService implements ServiceInterface {
     private static final Logger logger = LoggerFactory.getLogger(StudentService.class);
 
     @Autowired
-    StudentRepository repo;
+    private StudentRepository repo;
 
     @Override
     public ResponseEntity getStudentById(Integer id) {
         StudentEntity entity = repo.findStudentById(id);
         if (entity == null) {
-            return ResponseFactory.failed();
+            throw new AppException(ErrorCode.NOT_FOUND);
         }
         StudentResponse data = new StudentResponse();
         BeanUtils.copyProperties(entity, data);
@@ -40,7 +42,7 @@ public class StudentService implements ServiceInterface {
     public ResponseEntity getStudentByName(String name) {
         List<StudentEntity> data = repo.findListStudentByName(name);
         if(data == null){
-            return ResponseFactory.failed();
+            throw new AppException(ErrorCode.NOT_FOUND);
         }
         return ResponseFactory.success(data, "student information");
     }
@@ -49,11 +51,11 @@ public class StudentService implements ServiceInterface {
     public ResponseEntity addNewStudent(NewStudentRequest request) {
         if (request.getGpa() != null) {
             if (request.getGpa() < 0 || request.getGpa() > 4) {
-                return ResponseFactory.failed();
+                throw new AppException(ErrorCode.GPA_FAIL);
             }
         }
         if(request.getStudentName() == null){
-            return ResponseFactory.failed();
+            throw new AppException(ErrorCode.NAME_FAIL);
         }
         repo.addStudent(request);
 
@@ -64,11 +66,11 @@ public class StudentService implements ServiceInterface {
     public ResponseEntity updateStudent(Integer id, UpdateStudentRequest request) {
         StudentEntity entity = repo.findStudentById(id);
         if (entity == null) {
-            return ResponseFactory.failed();
+            throw new AppException(ErrorCode.NOT_FOUND);
         }
         if(request.getGpa() != null) {
             if (request.getGpa() < 0 || request.getGpa() > 4) {
-                return ResponseFactory.failed();
+                throw new AppException(ErrorCode.GPA_FAIL);
             }
         }
         repo.updateStudent(id,request);
@@ -79,7 +81,7 @@ public class StudentService implements ServiceInterface {
     public ResponseEntity deleteStudent(Integer id) {
         StudentEntity entity = repo.findStudentById(id);
         if(entity == null){
-            return ResponseFactory.failed();
+            throw new AppException(ErrorCode.NOT_FOUND);
         }
         repo.deleteStudent(id);
         return ResponseFactory.success();
@@ -89,7 +91,7 @@ public class StudentService implements ServiceInterface {
     public ResponseEntity getTopStudent(Integer top) {
         List<StudentEntity> data = repo.findTopStudent(top);
        if(data == null){
-           return ResponseFactory.failed();
+           throw new AppException(ErrorCode.NOT_FOUND);
        }
         return ResponseFactory.success(data, "student information");
     }
